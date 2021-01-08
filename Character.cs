@@ -8,16 +8,12 @@ public class Character : MonoBehaviour
     public event EventHandler OnCharacterDeath;
     public static List<Character> CharacterList = new List<Character>();
 
-    int MaxHp;
-    int MaxSpeed;
-    int MaxArmour;
+    float MaxHp, MaxSpeed, MaxArmour;
+    float HP, Armour, Speed;
 
-    int HP;
-    float Armour;
-    float Speed;
     public bool IsAlive;
 
-    public int hp
+    public float hp
     {
         get { return HP; }
         set { HP = value > MaxHp ? value : HP = MaxHp; }
@@ -35,12 +31,19 @@ public class Character : MonoBehaviour
         set { Armour = value > MaxArmour ? value : Armour = MaxArmour; }
     }
 
-    public void CharacterKill()
+    public void TakeDmg(float DamageAmount)
     {
-        OnCharacterDeath(this, EventArgs.Empty);
+        //Enter the damage here for example HP -= DamageAmount / (Armour / 4);
+        Debug.LogError("Please insert the Damage in the TakeDmg method in Character class (TakeDmg method incomplete!)");
+
+        if (HP <= 0)
+        {
+            OnCharacterDeath(this, EventArgs.Empty);
+            IsAlive = false;
+        }
     }
 
-    public void Spawn(int CurrentHP, float CurrentArmor, float CurrentSpeed, int MaxHp, int MaxSpeed, int MaxArmour, GameObject gameObject, Vector3 Position, Quaternion Rotation)
+    public void Spawn(float CurrentHP, float CurrentArmor, float CurrentSpeed, int MaxHp, int MaxSpeed, int MaxArmour, GameObject gameObject, Vector3 Position, Quaternion Rotation)
     {
         HP = CurrentHP;
         Armour = CurrentArmor;
@@ -49,12 +52,13 @@ public class Character : MonoBehaviour
         this.MaxHp = MaxHp;
         this.MaxSpeed = MaxSpeed;
         this.MaxArmour = MaxArmour;
+        IsAlive = HP > 0 ? true : false;
 
         Instantiate(gameObject, Position, Rotation);
         CharacterList.Add(this);
     }
 
-    protected void Set(int CurrentHP, float CurrentArmor, float CurrentSpeed, int MaxHp, int MaxSpeed, int MaxArmour)
+    protected void Set(float CurrentHP, float CurrentArmor, float CurrentSpeed, int MaxHp, int MaxSpeed, int MaxArmour)
     {
         HP = CurrentHP;
         Armour = CurrentArmor;
@@ -63,6 +67,7 @@ public class Character : MonoBehaviour
         this.MaxHp = MaxHp;
         this.MaxSpeed = MaxSpeed;
         this.MaxArmour = MaxArmour;
+        IsAlive = HP > 0 ? true : false;
 
         CharacterList.Add(this);
     }
