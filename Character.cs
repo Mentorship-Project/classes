@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Character
+public class Character : MonoBehaviour
 {
     public event EventHandler OnCharacterDeath;
     public static List<Character> CharacterList = new List<Character>();
@@ -12,15 +12,6 @@ public class Character
     int MaxSpeed;
     int MaxArmour;
 
-    public Character(int MaxHp, int MaxSpeed, int MaxArmour)
-    {
-        this.MaxHp = MaxHp;
-        this.MaxSpeed = MaxSpeed;
-        this.MaxArmour = MaxArmour;
-
-        CharacterList.Add(this);
-    }
-
     int HP;
     float Armour;
     float Speed;
@@ -28,40 +19,52 @@ public class Character
 
     public int hp
     {
-        get { if (HP > MaxHp)
-                return HP = MaxHp;
-
-            return HP;
-        }
-        set { HP = value; }
+        get { return HP; }
+        set { HP = value > MaxHp ? value : HP = MaxHp; }
     }
 
     public float speed
     {
-        get
-        {
-            if (Speed > MaxSpeed)
-                return Speed = MaxSpeed;
-
-            return HP;
-        }
-        set { Speed = value; }
+        get {return Speed;}
+        set { Speed = value > MaxSpeed ? value : Speed = MaxSpeed; }
     }
-
+     
     public float armour
     {
-        get
-        {
-            if (Armour > MaxArmour)
-                return Speed = MaxSpeed;
-
-            return HP;
-        }
-        set { Armour = value; }
+        get {return Armour;}
+        set { Armour = value > MaxArmour ? value : Armour = MaxArmour; }
     }
 
     public void CharacterKill()
     {
         OnCharacterDeath(this, EventArgs.Empty);
     }
+
+    public void Spawn(int CurrentHP, float CurrentArmor, float CurrentSpeed, int MaxHp, int MaxSpeed, int MaxArmour, GameObject gameObject, Vector3 Position, Quaternion Rotation)
+    {
+        HP = CurrentHP;
+        Armour = CurrentArmor;
+        Speed = CurrentSpeed;
+
+        this.MaxHp = MaxHp;
+        this.MaxSpeed = MaxSpeed;
+        this.MaxArmour = MaxArmour;
+
+        Instantiate(gameObject, Position, Rotation);
+        CharacterList.Add(this);
+    }
+
+    protected void Set(int CurrentHP, float CurrentArmor, float CurrentSpeed, int MaxHp, int MaxSpeed, int MaxArmour)
+    {
+        HP = CurrentHP;
+        Armour = CurrentArmor;
+        Speed = CurrentSpeed;
+
+        this.MaxHp = MaxHp;
+        this.MaxSpeed = MaxSpeed;
+        this.MaxArmour = MaxArmour;
+
+        CharacterList.Add(this);
+    }
+
 }
